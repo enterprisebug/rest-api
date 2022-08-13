@@ -1,54 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<TrustFrameworkPolicy 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
-  PolicySchemaVersion="0.3.0.0" 
-  TenantId="your-tenant.onmicrosoft.com" 
-  PolicyId="B2C_1A_REST_TrustFrameworkExtensions" 
-  PublicPolicyUri="http://your-tenant.onmicrosoft.com/B2C_1A_REST_TrustFrameworkExtensions">
-  
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="your-tenant.onmicrosoft.com" PolicyId="B2C_1A_REST_TrustFrameworkExtensions" PublicPolicyUri="http://your-tenant.onmicrosoft.com/B2C_1A_REST_TrustFrameworkExtensions">
+
   <BasePolicy>
     <TenantId>your-tenant.onmicrosoft.com</TenantId>
     <PolicyId>B2C_1A_REST_TrustFrameworkBase</PolicyId>
   </BasePolicy>
-  
+
   <BuildingBlocks>
     <ClaimsSchema>
       <!--Demo: Custom claims use in the solution -->
       <ClaimType Id="loyaltyNumber">
-	      <DisplayName>Loyalty number</DisplayName>
-	      <DataType>string</DataType>
-	      <UserHelpText>The loyalty number return from the REST API</UserHelpText>
-	    </ClaimType>
+        <DisplayName>Loyalty number</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>The loyalty number return from the REST API</UserHelpText>
+      </ClaimType>
       <ClaimType Id="userLanguage">
-	      <DisplayName>User language</DisplayName>
-	      <DataType>string</DataType>
-	      <UserHelpText>The current user language to be sent to the REST API</UserHelpText>
-	    </ClaimType>
+        <DisplayName>User language</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>The current user language to be sent to the REST API</UserHelpText>
+      </ClaimType>
       <ClaimType Id="normalizedEmail">
-	      <DisplayName>Normalized email</DisplayName>
-	      <DataType>string</DataType>
-	      <UserHelpText>The email provider by the user, after call to the REST API in lower case</UserHelpText>
-	    </ClaimType>      
+        <DisplayName>Normalized email</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>The email provider by the user, after call to the REST API in lower case</UserHelpText>
+      </ClaimType>
     </ClaimsSchema>
   </BuildingBlocks>
 
   <ClaimsProviders>
-	  <ClaimsProvider>
+    <ClaimsProvider>
       <DisplayName>Local Account</DisplayName>
       <TechnicalProfiles>
         <TechnicalProfile Id="LocalAccountSignUpWithLogonEmail">
           <Metadata>
             <!--Demo: disable the email validation in development environment-->
-            <!--Demo action required: remove in production environment--> 
+            <!--Demo action required: remove in production environment-->
             <Item Key="EnforceEmailVerification">False</Item>
           </Metadata>
           <ValidationTechnicalProfiles>
             <!--Demo: Add the validation technical profile in following order-->
             <ValidationTechnicalProfile ReferenceId="REST-ValidateEmail" />
 
-            <!--Demo action required: remove this line from the base policy--> 
+            <!--Demo action required: remove this line from the base policy-->
             <ValidationTechnicalProfile ReferenceId="AAD-UserWriteUsingLogonEmail" />
           </ValidationTechnicalProfiles>
         </TechnicalProfile>
@@ -79,7 +72,7 @@
     </ClaimsProvider>
 
     <!-- Facebook claims provider -->
-	  <ClaimsProvider>
+    <ClaimsProvider>
       <DisplayName>Facebook</DisplayName>
       <TechnicalProfiles>
         <TechnicalProfile Id="Facebook-OAUTH">
@@ -93,62 +86,62 @@
       </TechnicalProfiles>
     </ClaimsProvider>
 
-	<ClaimsProvider>
-    <DisplayName>REST APIs</DisplayName>
-    <TechnicalProfiles>
-      <!--Demo: this technical profile returns the loyalty number --> 
-	    <TechnicalProfile Id="REST-GetLoyaltyNumber">
-	      <DisplayName>Validate user input data and return loyaltyNumber claim</DisplayName>
-	      <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-	      <Metadata>
-	        <Item Key="ServiceUrl">http://your-app.azurewebsites.net/api/identity/loyalty</Item>
-	        <Item Key="AuthenticationType">None</Item>
-	        <Item Key="SendClaimsIn">Body</Item>
-	      </Metadata>
-        <InputClaims>
-          <!--Demo: optional claims to be sent to the REST API-->
-          <InputClaim ClaimTypeReferenceId="userLanguage" PartnerClaimType="language" DefaultValue="{Culture:LCID}" />
-          <InputClaim ClaimTypeReferenceId="objectId" />
-        </InputClaims>
-        <OutputClaims>
-          <OutputClaim ClaimTypeReferenceId="loyaltyNumber" />
-        </OutputClaims>
-        <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
-	    </TechnicalProfile>
-
-      <!--Demo: this technical validates the email address, by calling the REST API that 
-          checks whether the 'email' claim starts with the 'test'. If not, the REST API returns 
-          the email in lower case format. --> 
-	    <TechnicalProfile Id="REST-ValidateEmail">
-	        <DisplayName>Validate user input data and return loyaltyNumber claim</DisplayName>
-	        <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-	        <Metadata>
-	        <Item Key="ServiceUrl">http://your-app.azurewebsites.net/api/identity/validate</Item>
-	        <Item Key="AuthenticationType">None</Item>
-	        <Item Key="SendClaimsIn">Body</Item>
-	        </Metadata>
-	        <InputClaims>
+    <ClaimsProvider>
+      <DisplayName>REST APIs</DisplayName>
+      <TechnicalProfiles>
+        <!--Demo: this technical profile returns the loyalty number -->
+        <TechnicalProfile Id="REST-GetLoyaltyNumber">
+          <DisplayName>Validate user input data and return loyaltyNumber claim</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">http://your-app.azurewebsites.net/api/identity/loyalty</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+          </Metadata>
+          <InputClaims>
             <!--Demo: optional claims to be sent to the REST API-->
-	          <InputClaim ClaimTypeReferenceId="userLanguage" PartnerClaimType="language" DefaultValue="{Culture:LCID}" />
-	          <InputClaim ClaimTypeReferenceId="email" />
-	        </InputClaims>
-	        <OutputClaims>
-	          <OutputClaim ClaimTypeReferenceId="normalizedEmail" PartnerClaimType="email" />
-	        </OutputClaims>
-	        <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
-	    </TechnicalProfile>      
-    </TechnicalProfiles>
-	</ClaimsProvider>
- </ClaimsProviders>
+            <InputClaim ClaimTypeReferenceId="userLanguage" PartnerClaimType="language" DefaultValue="{Culture:LCID}" />
+            <InputClaim ClaimTypeReferenceId="objectId" />
+          </InputClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="loyaltyNumber" />
+          </OutputClaims>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
+        </TechnicalProfile>
+
+        <!--Demo: this technical validates the email address, by calling the REST API that 
+          checks whether the 'email' claim starts with the 'test'. If not, the REST API returns 
+          the email in lower case format. -->
+        <TechnicalProfile Id="REST-ValidateEmail">
+          <DisplayName>Validate user input data and return loyaltyNumber claim</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">http://your-app.azurewebsites.net/api/identity/validate</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+          </Metadata>
+          <InputClaims>
+            <!--Demo: optional claims to be sent to the REST API-->
+            <InputClaim ClaimTypeReferenceId="userLanguage" PartnerClaimType="language" DefaultValue="{Culture:LCID}" />
+            <InputClaim ClaimTypeReferenceId="email" />
+          </InputClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="normalizedEmail" PartnerClaimType="email" />
+          </OutputClaims>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
 
   <UserJourneys>
-        <UserJourney Id="SignUpOrSignIn">
+    <UserJourney Id="SignUpOrSignIn">
       <OrchestrationSteps>
-      
+
         <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
           <ClaimsProviderSelections>
             <ClaimsProviderSelection TargetClaimsExchangeId="FacebookExchange" />
-           <ClaimsProviderSelection ValidationClaimsExchangeId="LocalAccountSigninEmailExchange" />
+            <ClaimsProviderSelection ValidationClaimsExchangeId="LocalAccountSigninEmailExchange" />
           </ClaimsProviderSelections>
           <ClaimsExchanges>
             <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
@@ -165,7 +158,7 @@
           </Preconditions>
           <ClaimsExchanges>
             <ClaimsExchange Id="FacebookExchange" TechnicalProfileReferenceId="Facebook-OAUTH" />
-           <ClaimsExchange Id="SignUpWithLogonEmailExchange" TechnicalProfileReferenceId="LocalAccountSignUpWithLogonEmail" />
+            <ClaimsExchange Id="SignUpWithLogonEmailExchange" TechnicalProfileReferenceId="LocalAccountSignUpWithLogonEmail" />
           </ClaimsExchanges>
         </OrchestrationStep>
 
@@ -228,14 +221,14 @@
         </OrchestrationStep>
 
         <!--Demo: This step get the loyalty number -->
-         <OrchestrationStep Order="7" Type="ClaimsExchange">
+        <OrchestrationStep Order="7" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="RESTGetLoyaltyNumber" TechnicalProfileReferenceId="REST-GetLoyaltyNumber" />
           </ClaimsExchanges>
         </OrchestrationStep>
 
         <OrchestrationStep Order="8" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
- 
+
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>
